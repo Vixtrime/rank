@@ -3,15 +3,17 @@
 namespace App\API\DataForSeoBundle\Client;
 
 use App\API\DataForSeoBundle\Client\DataForSeoClient;
+use App\API\DataForSeoBundle\Form\DataForSeoRankFormType;
+use App\Core\BaseBundle\Helpers\FormService;
 use App\Core\SeoApiBundle\SeoApi\SeoApiProcessorInterface;
 
 /**
- * Class DataForSeoApiProcessor
+ * Class DataForSeoRankApiProcessor
  * @package App\API\DataForSeoBundle\SeoBundle\DataForSeo\Client
  */
-class DataForSeoApiProcessor implements SeoApiProcessorInterface
+class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
 {
-    const API_NAME = 'data-for-seo';
+    const API_PROCESSOR_NAME = 'rank';
     const RANK_TASK_POST_URL = '/v2/rnk_tasks_post';
     const RANK_TASK_GET_URL = 'v2/rnk_tasks_get';
 
@@ -21,27 +23,46 @@ class DataForSeoApiProcessor implements SeoApiProcessorInterface
     private $dataForSeoClient;
 
     /**
-     * @return string
+     * @var DataForSeoRankFormType
      */
-    public static function getSeoApiName()
+    private $dataForSeoRankForm;
+
+    /**
+     * @var FormService
+     */
+    private $formService;
+
+    /**
+     * DataForSeoRankApiProcessor constructor.
+     * @param DataForSeoClient $dataForSeoClient
+     * @param DataForSeoRankFormType $formType
+     * @param FormService $formService
+     */
+    public function __construct
+    (
+        DataForSeoClient $dataForSeoClient,
+        DataForSeoRankFormType $formType,
+        FormService $formService
+    )
     {
-        return self::API_NAME;
+        $this->dataForSeoClient = $dataForSeoClient;
+        $this->dataForSeoRankForm = $formType;
+        $this->formService = $formService;
     }
 
     /**
-     * DataForSeoApiProcessor constructor.
-     * @param DataForSeoClient $dataForSeoClient
+     * @return string
      */
-    public function __construct(DataForSeoClient $dataForSeoClient)
+    public static function getApiProcessorName(): string
     {
-        $this->dataForSeoClient = $dataForSeoClient;
+        return self::API_PROCESSOR_NAME;
     }
 
     /**
      * @param $newTaskInfo
      * @return mixed|void
      */
-    public function createRankTask($newTaskInfo)
+    public function createTask($newTaskInfo)
     {
 //        dd('hellosdf');
 
@@ -65,10 +86,18 @@ class DataForSeoApiProcessor implements SeoApiProcessorInterface
      * @param $taskId
      * @return mixed|void
      */
-    public function getRankTaskData($taskId)
+    public function getTaskData($taskId)
     {
         dd($taskId);
         $this->dataForSeoClient->get(self::RANK_TASK_GET_URL);
     }
+
+
+    public function getTaskForm()
+    {
+        $taskForm = $this->formService->createForm(DataForSeoRankFormType::class);
+        dd($this->formService->getFormFields($taskForm));
+    }
+
 
 }

@@ -26,7 +26,10 @@ services:
 #    app.seobundle.dataforseo.client.credentials:
 
 
-    App\API\DataForSeoBundle\Client\DataForSeoApiProcessor:
+    App\API\DataForSeoBundle\Client\DataForSeoRankApiProcessor:
+        public: true
+
+    App\API\DataForSeoBundle\Client\DataForSeoApiProvider:
         public: true
 
     App\API\DataForSeoBundle\Client\DataForSeoClient:

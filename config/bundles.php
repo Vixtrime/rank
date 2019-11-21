@@ -13,8 +13,11 @@ return [
     Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true],
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
     Symfony\Bundle\WebServerBundle\WebServerBundle::class => ['dev' => true],
-    App\Core\SeoApiBundle\SeoApiBundle::class => ['dev' => true],
+    Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
+
     App\DashboardBundle\DashboardBundle::class => ['dev' => true],
     App\API\DataForSeoBundle\DataForSeoBundle::class => ['dev' => true],
-    Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
+    App\Core\BaseBundle\BaseBundle::class => ['dev' => true],
+    App\Core\SeoApiBundle\SeoApiBundle::class => ['dev' => true],
+
 ];

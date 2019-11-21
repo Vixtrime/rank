@@ -2,9 +2,10 @@
 
 namespace App\Core\SeoApiBundle\Controller;
 
-use App\Core\SeoApiBundle\SeoApi\SeoApiFactory;
+use App\Core\SeoApiBundle\SeoApi\SeoApiProviderFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -14,40 +15,59 @@ use Symfony\Component\Routing\Annotation\Route;
 class SeoController extends AbstractController
 {
     /**
-     * @var SeoApiFactory
+     * @var SeoApiProviderFactory
      */
-    private $seoApiFactory;
+    private $seoApiProviderFactory;
 
     /**
      * SeoController constructor.
-     * @param SeoApiFactory $seoApiFactory
+     * @param SeoApiProviderFactory $seoApiProviderFactory
      */
-    public function __construct(SeoApiFactory $seoApiFactory)
+    public function __construct(SeoApiProviderFactory $seoApiProviderFactory)
     {
-        $this->seoApiFactory = $seoApiFactory;
+        $this->seoApiProviderFactory = $seoApiProviderFactory;
     }
 
     /**
-     * //TODO GET -> POST
-     * @Route(path="/{seoApiName}/seo-task", methods={"POST"})
+     * @Route(path="/seo-api/{seoApiProvider}/{apiProcessor}/seo-task", methods={"POST"})
      * @param Request $request
-     * @param $seoApiName
+     * @param $seoApiProvider
+     * @param $apiProcessor
      */
-    public function createSeoTask(Request $request, $seoApiName)
+    public function createSeoTask(Request $request, $seoApiProvider, $apiProcessor)
     {
-//        $newTaskInfo = json_decode($request->getContent()['newTaskInfo'], true);
+        $newTaskInfo = json_decode($request->getContent()['taskForm'], true);
         $newTaskInfo = null;
-        $this->seoApiFactory->getSeoApiProcessor($seoApiName)->createRankTask($newTaskInfo);
+        $this->seoApiProviderFactory->getSeoApiProvider($seoApiProvider)->getApiProcessor($apiProcessor)->createTask($newTaskInfo);
     }
 
     /**
-     * @Route(path="/{seoApiName}/seo-task/{id}", methods={"GET"})
+     * @Route(path="/seo-api/{seoApiProvider}/{apiProcessor}/seo-task/{id}", methods={"GET"})
      * @param $seoApiName
      * @param $id
      */
     public function getSeoTask($seoApiName, $id)
     {
-        $this->seoApiFactory->getSeoApiProcessor($seoApiName)->getRankTaskData($id);
+        $this->seoApiProviderFactory->getSeoApiProvider($seoApiName)->getApiProcessor($id);
     }
 
+    /**
+     * @Route(path="/seo-api/{seoApiProvider}/{apiProcessor}/seo-tasks", methods={"GET"})
+     * @param $seoApiName
+     * @param $id
+     */
+    public function getSeoTasks($seoApiName, $id)
+    {
+        $this->seoApiProviderFactory->getSeoApiProvider($seoApiName)->getApiProcessor($id);
+    }
+
+    /**
+     * @Route(path="/seo-api/{seoApiProvider}/{apiProcessor}/form", methods={"GET"})
+     * @param $seoApiProvider
+     * @param $apiProcessor
+     */
+    public function getSeoTaskForm($seoApiProvider, $apiProcessor)
+    {
+        $this->seoApiProviderFactory->getSeoApiProvider($seoApiProvider)->getApiProcessor($apiProcessor)->getTaskForm();
+    }
 }
