@@ -4,6 +4,7 @@ namespace App\Core\SeoApiBundle\Controller;
 
 use App\Core\SeoApiBundle\SeoApi\SeoApiProviderFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,9 +66,13 @@ class SeoController extends AbstractController
      * @Route(path="/seo-api/{seoApiProvider}/{apiProcessor}/form", methods={"GET"})
      * @param $seoApiProvider
      * @param $apiProcessor
+     * @return JsonResponse
      */
     public function getSeoTaskForm($seoApiProvider, $apiProcessor)
     {
-        $this->seoApiProviderFactory->getSeoApiProvider($seoApiProvider)->getApiProcessor($apiProcessor)->getTaskForm();
+        return new JsonResponse($this->seoApiProviderFactory
+            ->getSeoApiProvider($seoApiProvider)
+            ->getApiProcessor($apiProcessor)
+            ->getTaskForm());
     }
 }

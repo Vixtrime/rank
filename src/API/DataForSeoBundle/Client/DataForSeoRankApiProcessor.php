@@ -96,7 +96,7 @@ class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
     public function getTaskForm()
     {
         $taskForm = $this->formService->createForm(DataForSeoRankFormType::class);
-        dd($this->formService->getFormFields($taskForm));
+        return $this->formService->getFormFields($taskForm);
     }
 
 
