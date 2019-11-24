@@ -2,6 +2,7 @@
 
 namespace App\API\DataForSeoBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,6 +42,11 @@ class DataForSeoLocation
     private $locType;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\API\DataForSeoBundle\Entity\DataForSeoRankTask", mappedBy="loc")
+     */
+    private $rankTask;
+
+    /**
      * DataForSeoLocation constructor.
      * @param int $locId
      * @param string $locName
@@ -49,6 +55,7 @@ class DataForSeoLocation
      */
     public function __construct(int $locId, string $locName, string $locNameCanonical, string $locType)
     {
+        $this->rankTask = new ArrayCollection();
         $this->setLocId($locId)
             ->setLocName($locName)
             ->setLocNameCanonical($locNameCanonical)

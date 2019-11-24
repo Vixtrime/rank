@@ -14,37 +14,25 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class DataForSeoLocationRepository extends ServiceEntityRepository
 {
+    /**
+     * DataForSeoLocationRepository constructor.
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, DataForSeoLocation::class);
     }
 
-    // /**
-    //  * @return DataForSeoLocation[] Returns an array of DataForSeoLocation objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return array
+     */
+    public function getLocationsData(): array
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select('l.id', 'l.locNameCanonical')
+            ->from('App\API\DataForSeoBundle\Entity\DataForSeoLocation', 'l')
             ->getQuery()
-            ->getResult()
-        ;
+            ->execute();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?DataForSeoLocation
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

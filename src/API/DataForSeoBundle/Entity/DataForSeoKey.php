@@ -2,6 +2,7 @@
 
 namespace App\API\DataForSeoBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,12 +32,18 @@ class DataForSeoKey
     private $keyValue;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\API\DataForSeoBundle\Entity\DataForSeoRankTask", mappedBy="key")
+     */
+    private $rankTask;
+
+    /**
      * DataForSeoKey constructor.
      * @param int $keyId
      * @param string $keyValue
      */
     public function __construct(int $keyId, string $keyValue)
     {
+        $this->rankTask = new ArrayCollection();
         $this->setKeyId($keyId)
             ->setKeyValue($keyValue);
     }

@@ -5,6 +5,8 @@ const axios = require('axios');
 import Main from './Main';
 import 'vuetify/dist/vuetify.min.css';
 import Vuetify from 'vuetify/lib';
+import '@mdi/font/css/materialdesignicons.min.css';
+
 
 const opts = {
     theme: {
@@ -24,10 +26,10 @@ const opts = {
         // },
         // },
     },
-    lang: {
+    // lang: {
         // locales: {ven, vru},
         // current: LANGUAGE,
-    },
+    // },
     components: {},
     iconfont: 'mdi'
 };
@@ -39,6 +41,7 @@ Vue.use(Vuetify);
 
 new Vue({
     components: {Main},
-    template: "<Main/>"
+    template: "<Main/>",
+    vuetify: new Vuetify()
     // render: a => a(Main)
 }).$mount('#main');

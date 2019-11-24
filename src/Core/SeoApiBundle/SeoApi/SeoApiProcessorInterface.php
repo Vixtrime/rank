@@ -20,6 +20,18 @@ interface SeoApiProcessorInterface
     public function createTask($newTaskInfo);
 
     /**
+     * @param $taskId
+     * @return mixed
+     */
+    public function updateTask($taskId);
+
+    /**
+     * @param $taskId
+     * @return mixed
+     */
+    public function syncTask($taskId);
+
+    /**
      * @param $taskId int|string
      * @return mixed
      */
@@ -27,4 +39,11 @@ interface SeoApiProcessorInterface
 
 
     public function getTaskForm();
+
+    /**
+     * @return array
+     */
+    public function getTasks();
+
+
 }

@@ -34,32 +34,58 @@ class SeoController extends AbstractController
      * @param Request $request
      * @param $seoApiProvider
      * @param $apiProcessor
+     * @return JsonResponse
      */
     public function createSeoTask(Request $request, $seoApiProvider, $apiProcessor)
     {
-        $newTaskInfo = json_decode($request->getContent()['taskForm'], true);
-        $newTaskInfo = null;
-        $this->seoApiProviderFactory->getSeoApiProvider($seoApiProvider)->getApiProcessor($apiProcessor)->createTask($newTaskInfo);
+        $newTaskInfo = json_decode($request->getContent(), true);
+
+        try {
+            $this->seoApiProviderFactory->getSeoApiProvider($seoApiProvider)->getApiProcessor($apiProcessor)->createTask($newTaskInfo['taskForm']);
+            $response = ['success' => true, 'message' => 'Success!'];
+        } catch (\InvalidArgumentException $e) {
+            $response = ['success' => false, 'message' => $e->getMessage()];
+        } catch (\Throwable $e) {
+            $response = ['success' => false, 'message' => 'Something went wrong! Please try again.'];
+        }
+
+        return new JsonResponse($response);
     }
 
     /**
      * @Route(path="/seo-api/{seoApiProvider}/{apiProcessor}/seo-task/{id}", methods={"GET"})
-     * @param $seoApiName
+     * @param $seoApiProvider
+     * @param $apiProcessor
      * @param $id
      */
-    public function getSeoTask($seoApiName, $id)
+    public function getSeoTask($seoApiProvider, $apiProcessor, $id)
     {
-        $this->seoApiProviderFactory->getSeoApiProvider($seoApiName)->getApiProcessor($id);
+        $this->seoApiProviderFactory->getSeoApiProvider($seoApiProvider)->getApiProcessor($apiProcessor)->getTaskData($id);
     }
 
     /**
      * @Route(path="/seo-api/{seoApiProvider}/{apiProcessor}/seo-tasks", methods={"GET"})
-     * @param $seoApiName
+     * @param $seoApiProvider
+     * @param $apiProcessor
+     * @return JsonResponse
+     */
+    public function getSeoTasks($seoApiProvider, $apiProcessor)
+    {
+        return new JsonResponse($this->seoApiProviderFactory
+            ->getSeoApiProvider($seoApiProvider)
+            ->getApiProcessor($apiProcessor)
+            ->getTasks());
+    }
+
+    /**
+     * @Route(path="/seo-api/{seoApiProvider}/{apiProcessor}/seo-task/{id}", methods={"GET"})
+     * @param $seoApiProvider
+     * @param $apiProcessor
      * @param $id
      */
-    public function getSeoTasks($seoApiName, $id)
+    public function updateSeoTask($seoApiProvider, $apiProcessor, $id)
     {
-        $this->seoApiProviderFactory->getSeoApiProvider($seoApiName)->getApiProcessor($id);
+        $this->seoApiProviderFactory->getSeoApiProvider($seoApiProvider)->getApiProcessor($apiProcessor)->updateTask();
     }
 
     /**
@@ -74,5 +100,18 @@ class SeoController extends AbstractController
             ->getSeoApiProvider($seoApiProvider)
             ->getApiProcessor($apiProcessor)
             ->getTaskForm());
+    }
+
+    /**
+     * @Route(path="/seo-api/{seoApiProvider}/{apiProcessor}/seo-task/{id}/sync", methods={"POST"})
+     * @param $seoApiProvider
+     * @param $apiProcessor
+     * @param $id
+     * @return JsonResponse
+     */
+    public function syncTask($seoApiProvider, $apiProcessor, $id)
+    {
+        $this->seoApiProviderFactory->getSeoApiProvider($seoApiProvider)->getApiProcessor($apiProcessor)->syncTask($id);
+        return new JsonResponse('ok');
     }
 }
