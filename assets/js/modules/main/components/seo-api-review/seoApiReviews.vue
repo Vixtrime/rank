@@ -69,15 +69,9 @@
             this.getTasks().then((response) => {
                 this.tasks = response.data;
             });
-            // this.refreshTasks();
-            // setInterval(this.refreshTasks(), 3000);
-            // function taskRefreshing() {
             setInterval(() => {
                 this.refreshTasks()
             }, 5000);
-            // }
-            //
-            // taskRefreshing();
         },
         methods: {
             getTasks() {
@@ -92,7 +86,6 @@
                     this.tasks = response.data;
                 });
             }
-
         }
     }
 </script>

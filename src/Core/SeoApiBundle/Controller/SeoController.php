@@ -3,6 +3,7 @@
 namespace App\Core\SeoApiBundle\Controller;
 
 use App\Core\SeoApiBundle\SeoApi\SeoApiProviderFactory;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,12 +22,19 @@ class SeoController extends AbstractController
     private $seoApiProviderFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * SeoController constructor.
      * @param SeoApiProviderFactory $seoApiProviderFactory
+     * @param LoggerInterface $logger
      */
-    public function __construct(SeoApiProviderFactory $seoApiProviderFactory)
+    public function __construct(SeoApiProviderFactory $seoApiProviderFactory, LoggerInterface $logger)
     {
         $this->seoApiProviderFactory = $seoApiProviderFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -46,6 +54,7 @@ class SeoController extends AbstractController
         } catch (\InvalidArgumentException $e) {
             $response = ['success' => false, 'message' => $e->getMessage()];
         } catch (\Throwable $e) {
+            $this->logger->error($e->getMessage() . $e->getTraceAsString());
             $response = ['success' => false, 'message' => 'Something went wrong! Please try again.'];
         }
 
@@ -78,17 +87,6 @@ class SeoController extends AbstractController
     }
 
     /**
-     * @Route(path="/seo-api/{seoApiProvider}/{apiProcessor}/seo-task/{id}", methods={"GET"})
-     * @param $seoApiProvider
-     * @param $apiProcessor
-     * @param $id
-     */
-    public function updateSeoTask($seoApiProvider, $apiProcessor, $id)
-    {
-        $this->seoApiProviderFactory->getSeoApiProvider($seoApiProvider)->getApiProcessor($apiProcessor)->updateTask();
-    }
-
-    /**
      * @Route(path="/seo-api/{seoApiProvider}/{apiProcessor}/form", methods={"GET"})
      * @param $seoApiProvider
      * @param $apiProcessor
@@ -111,7 +109,15 @@ class SeoController extends AbstractController
      */
     public function syncTask($seoApiProvider, $apiProcessor, $id)
     {
-        $this->seoApiProviderFactory->getSeoApiProvider($seoApiProvider)->getApiProcessor($apiProcessor)->syncTask($id);
-        return new JsonResponse('ok');
+        try {
+            $this->seoApiProviderFactory->getSeoApiProvider($seoApiProvider)->getApiProcessor($apiProcessor)->syncTask($id);
+            $response = ['success' => true, 'message' => 'Success!'];
+        } catch (\Exception $e) {
+            $response = ['success' => false, 'message' => $e->getMessage()];
+        } catch (\Throwable $e) {
+            $this->logger->error($e->getMessage() . $e->getTraceAsString());
+            $response = ['success' => false, 'message' => 'Something went wrong, please try again later'];
+        }
+        return new JsonResponse($response);
     }
 }

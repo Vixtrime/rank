@@ -74,32 +74,32 @@ class FormService
         return $jsonAttrs;
     }
 
-//    /**
-//     * @param FormInterface $form
-//     * @return array
-//     */
-//    public function getFormErrors(FormInterface $form)
-//    {
-//        $errors = [];
-//        foreach ($form->getErrors() as $error) {
-//            if (!array_key_exists('formErrors', $errors)) {
-//                $errors['formErrors'] = [];
-//            }
-//            array_push($errors['formErrors'], $error->getMessage());
-//        }
-//        foreach ($form->all() as $field) {
-//            foreach ($field->getErrors() as $error) {
-//                if (!array_key_exists('fieldErrors', $errors)) {
-//                    $errors['fieldErrors'] = [];
-//                }
-//                if (!array_key_exists($field->getName(), $errors['fieldErrors'])) {
-//                    $errors['fieldErrors'][$field->getName()] = [];
-//                }
-//                array_push($errors['fieldErrors'][$field->getName()], $error->getMessage());
-//            }
-//        }
-//        return $errors;
-//    }
+    /**
+     * @param FormInterface $form
+     * @return array
+     */
+    public function getFormErrors(FormInterface $form)
+    {
+        $errors = [];
+        foreach ($form->getErrors() as $error) {
+            if (!array_key_exists('formErrors', $errors)) {
+                $errors['formErrors'] = [];
+            }
+            array_push($errors['formErrors'], $error->getMessage());
+        }
+        foreach ($form->all() as $field) {
+            foreach ($field->getErrors() as $error) {
+                if (!array_key_exists('fieldErrors', $errors)) {
+                    $errors['fieldErrors'] = [];
+                }
+                if (!array_key_exists($field->getName(), $errors['fieldErrors'])) {
+                    $errors['fieldErrors'][$field->getName()] = [];
+                }
+                array_push($errors['fieldErrors'][$field->getName()], $error->getMessage());
+            }
+        }
+        return $errors;
+    }
 
 //    /**
 //     * @param array $formErrors

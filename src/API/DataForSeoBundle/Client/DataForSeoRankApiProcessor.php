@@ -10,6 +10,7 @@ use App\API\DataForSeoBundle\Services\DataForSeoLocationService;
 use App\API\DataForSeoBundle\Services\DataForSeoSearchEngineService;
 use App\Core\BaseBundle\Helpers\FormService;
 use App\Core\SeoApiBundle\SeoApi\SeoApiProcessorInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class DataForSeoRankApiProcessor
@@ -57,6 +58,11 @@ class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
     private $dataForSeoKeyRepository;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * DataForSeoRankApiProcessor constructor.
      * @param DataForSeoClient $dataForSeoClient
      * @param DataForSeoRankFormType $formType
@@ -65,6 +71,7 @@ class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
      * @param DataForSeoSearchEngineService $dataForSeoSearchEngineService
      * @param DataForSeoRankTaskRepository $dataForSeoRankTaskRepository
      * @param DataForSeoKeyRepository $dataForSeoKeyRepository
+     * @param LoggerInterface $logger
      */
     public function __construct
     (
@@ -74,7 +81,8 @@ class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
         DataForSeoLocationService $locationService,
         DataForSeoSearchEngineService $dataForSeoSearchEngineService,
         DataForSeoRankTaskRepository $dataForSeoRankTaskRepository,
-        DataForSeoKeyRepository $dataForSeoKeyRepository
+        DataForSeoKeyRepository $dataForSeoKeyRepository,
+        LoggerInterface $logger
     )
     {
         $this->dataForSeoClient = $dataForSeoClient;
@@ -84,6 +92,7 @@ class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
         $this->dataForSeoSearchEngineService = $dataForSeoSearchEngineService;
         $this->rankTaskRepository = $dataForSeoRankTaskRepository;
         $this->dataForSeoKeyRepository = $dataForSeoKeyRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -97,6 +106,8 @@ class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
     /**
      * @param $newTaskInfo
      * @return mixed|void
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function createTask($newTaskInfo)
     {
@@ -118,34 +129,37 @@ class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
                 $rankTask = $this->rankTaskRepository->createRankTask($token, $priority, $form->getNormData()['site'], $se, $loc);
 
                 $postResult = $this->dataForSeoClient->post('/v2/rnk_tasks_post', ['data' =>
-                    ['t1o2k3e3n5' =>
+                    [$token =>
                         [
                             "priority" => $rankTask->getPriority(),
                             "site" => $rankTask->getSite(),
                             "se_id" => $rankTask->getSe()->getSeId(),
                             "loc_id" => $rankTask->getLoc()->getLocId(),
-                            "key" => $form->getNormData()['key']
+                            "key" => $form->getNormData()['key'],
                         ]
                     ]
                 ]);
 
                 if ($postResult['status'] == "ok") {
 
-                    $rankTask->setApiId($postResult['results']['t1o2k3e3n5']['task_id']);
+                    $resultData = $postResult['results'][$token];
 
-                    $keyword = $this->dataForSeoKeyRepository
-                        ->createKey($postResult['results']['t1o2k3e3n5']['key_id'],
-                            $postResult['results']['t1o2k3e3n5']['post_key']);
+                    $keyword = $this->dataForSeoKeyRepository->createKey($resultData['key_id'], $resultData['post_key']);
                     $this->dataForSeoKeyRepository->saveKey($keyword);
 
+                    $rankTask->setApiId($resultData['task_id']);
                     $rankTask->setKey($keyword)->setStatus(0);
                     $this->rankTaskRepository->save($rankTask);
 
-                } else {
 
+                } else {
+                    $this->logger->error('API error.' . $postResult['results'][$token]['error']['message'] . '; Key: ' . $form->getNormData()['key']);
+                    throw new \InvalidArgumentException('API error.' . $postResult['results'][$token]['error']['message']);
                 }
             }
         } else {
+            //TODO Handle form errors no front-end part
+            //dd($this->formService->getFormErrors($form));
             throw new \InvalidArgumentException('Incorrect form data.');
         }
     }
@@ -156,7 +170,7 @@ class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
      */
     public function getTaskData($taskId)
     {
-        dd($this->dataForSeoClient->get(self::RANK_TASK_GET_URL . '/' . $taskId));
+        return $this->dataForSeoClient->get(self::RANK_TASK_GET_URL . '/' . $taskId);
     }
 
 
@@ -178,6 +192,8 @@ class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
     /**
      * @param $taskId
      * @return mixed|void
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function syncTask($taskId)
     {
@@ -197,19 +213,15 @@ class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
                     ->setResultsCount($taskData['results_count'])
                     ->setResultSeCheckUrl($taskData['result_se_check_url'])
                     ->setResultExtra($taskData['result_extra'])
-                    ->setStatus(1)
-                    ->setResultDatetime($taskData['result_datetime']);
+                    ->setStatus(1);
 
                 $this->rankTaskRepository->save($task);
 
+            } else {
+                throw new \Exception('No results for current task, please try again later');
             }
+        } else {
+            throw new \Exception('No task found by this identifier');
         }
     }
-
-    public function updateTask($taskId)
-    {
-
-    }
-
-
 }

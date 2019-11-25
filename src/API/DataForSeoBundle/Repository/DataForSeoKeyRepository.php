@@ -31,7 +31,6 @@ class DataForSeoKeyRepository extends ServiceEntityRepository
     {
         $this->_em->persist($key);
         $this->_em->flush();
-
     }
 
 }

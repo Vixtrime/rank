@@ -38,6 +38,7 @@
                     <v-divider></v-divider>
                     <v-card-actions class="pa-3">
                         <v-spacer></v-spacer>
+                        <div class="pr-3">{{ btnInfo }}</div>
                         <v-btn @click="createTask">
                             Submit
                         </v-btn>
@@ -57,7 +58,7 @@
             return {
                 select: {state: 'Florida', abbr: 'FL'},
                 app: {},
-                // select: {},
+                btnInfo: null,
                 form: {
                     formData: {
                         se: [],
@@ -85,9 +86,7 @@
                 axios.post('/seo-api/data-for-seo/rank/seo-task', {
                     taskForm: this.form.formSchema
                 }).then((response) => {
-                    if (response.data.success) {
-                        
-                    }
+                    this.btnInfo = response.data.message;
                 });
             },
             prepareTaskForm() {

@@ -34,6 +34,11 @@ class DataForSeoRankTaskRepository extends ServiceEntityRepository
         return new DataForSeoRankTask($token, $priority, $site, $se, $loc);
     }
 
+    /**
+     * @param DataForSeoRankTask $task
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function save(DataForSeoRankTask $task)
     {
         $this->_em->persist($task);
@@ -45,7 +50,7 @@ class DataForSeoRankTaskRepository extends ServiceEntityRepository
         return $this->_em->createQueryBuilder()
             ->select('t.id', 't.apiId', 't.site', 't.priority', 't.resultSeCheckUrl', 't.resultsCount',
                 't.resultSnippet', 't.resultExtra', 't.resultTitle', 't.resultUrl', 't.resultPosition',
-                't.resultDatetime', 't.status', 'l.locName', 's.name', 's.language', 'k.keyValue')
+                't.status', 'l.locName', 's.name', 's.language', 'k.keyValue')
             ->from('App\API\DataForSeoBundle\Entity\DataForSeoRankTask', 't')
             ->leftJoin('App\API\DataForSeoBundle\Entity\DataForSeoLocation', 'l', 'WITH', 't.loc = l.id')
             ->leftJoin('App\API\DataForSeoBundle\Entity\DataForSeoSearchEngine', 's', 'WITH', 't.se = s.id')

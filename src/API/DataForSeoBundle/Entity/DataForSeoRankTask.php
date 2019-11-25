@@ -86,11 +86,6 @@ class DataForSeoRankTask
      */
     private $resultPosition;
 
-    /**
-     * @var string
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $resultDatetime;
 
     /**
      * @var int
@@ -390,24 +385,6 @@ class DataForSeoRankTask
     public function setResultPosition($resultPosition): DataForSeoRankTask
     {
         $this->resultPosition = $resultPosition;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getResultDatetime(): string
-    {
-        return $this->resultDatetime;
-    }
-
-    /**
-     * @param string $resultDatetime
-     * @return DataForSeoRankTask
-     */
-    public function setResultDatetime(string $resultDatetime): DataForSeoRankTask
-    {
-        $this->resultDatetime = $resultDatetime;
         return $this;
     }
 
