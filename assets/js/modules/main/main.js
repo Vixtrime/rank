@@ -9,27 +9,7 @@ import '@mdi/font/css/materialdesignicons.min.css';
 
 
 const opts = {
-    theme: {
-        // themes: {
-        //     light: {
-        //         primary: '#455A64',
-        //         secondary: '#0277BD',
-        // primary: colors.blue.accent2,
-        // accent: colors.shades.black,
-        // error: colors.red.lighten1,
-        // info: colors.lightBlue.accent2,
-        // success: colors.green.accent3,
-        // warning: colors.orange.accent2,
-        // },
-        // dark: {
-        // primary: colors.blue.lighten3,
-        // },
-        // },
-    },
-    // lang: {
-        // locales: {ven, vru},
-        // current: LANGUAGE,
-    // },
+    theme: {},
     components: {},
     iconfont: 'mdi'
 };

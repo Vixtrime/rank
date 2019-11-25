@@ -58,12 +58,6 @@
         name: "seoApiReviews",
         data() {
             return {
-                desserts: [
-                    {
-                        name: 'Frozen Yogurt',
-                        calories: 159,
-                    },
-                ],
                 tasks: []
             }
         },

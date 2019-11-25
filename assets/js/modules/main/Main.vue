@@ -6,9 +6,8 @@
 </template>
 
 <script>
-    import axios from 'axios';
-    import seoApiTask from "./components/seo-api-task/seoApiTask";
-    import seoApiReviews from "./components/seo-api-review/seoApiReviews";
+    import seoApiTask from "./components/seoApiTask/seoApiTask";
+    import seoApiReviews from "./components/seoApiReview/seoApiReviews";
 
     export default {
         name: "Main",
