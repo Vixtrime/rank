@@ -136,6 +136,7 @@ class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
                             "se_id" => $rankTask->getSe()->getSeId(),
                             "loc_id" => $rankTask->getLoc()->getLocId(),
                             "key" => $form->getNormData()['key'],
+                            "postback_url" => 'https://45e938b8.ngrok.io/seo-api/data-for-seo/rank/seo-task/recive-postback'
                         ]
                     ]
                 ]);
@@ -223,4 +224,36 @@ class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
             throw new \Exception('No task found by this identifier');
         }
     }
+
+    /**
+     * @param array $postbackData
+     * @return mixed|void
+     * @throws \Doctrine\Common\Persistence\Mapping\MappingException
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function processPostback(array $postbackData)
+    {
+        if ($postbackData['status'] == 'ok' && $postbackData['results_count'] > 0) {
+            file_put_contents('/var/www/rank/var/file', print_r($postbackData, true), FILE_APPEND);
+
+            $tasks = [];
+            foreach ($postbackData["results"]["organic"] as $taskRow) {
+                $task = $this->rankTaskRepository->findOneBy(['apiId' => $taskRow['task_id']]);
+                $task->setResultPosition($taskRow['result_position'])
+                    ->setResultUrl($taskRow['result_url'])
+                    ->setResultPosition($taskRow['result_position'])
+                    ->setResultTitle($taskRow['result_title'])
+                    ->setResultSnippet($taskRow['result_snippet'])
+                    ->setResultsCount($taskRow['results_count'])
+                    ->setResultSeCheckUrl($taskRow['result_se_check_url'])
+                    ->setResultExtra($taskRow['result_extra'])
+                    ->setStatus(1);
+                $tasks[] = $task;
+            }
+            $this->rankTaskRepository->saveTasks($tasks);
+
+        }
+    }
+
+
 }

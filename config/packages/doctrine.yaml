@@ -2,19 +2,19 @@ doctrine:
     dbal:
 #        url: '%env(resolve:DATABASE_URL)%'
 
-        dbname: rank_active
-        host: 127.0.0.1
-        port: 5432
-        user: medvedev
-        password: nuncOmnia113!
-        driver: pdo_pgsql
-
-#        dbname: challenger22
-#        host: 78.46.124.49
+#        dbname: rank_active
+#        host: 127.0.0.1
 #        port: 5432
-#        user: challenger22
-#        password: v0B4XUN4f
+#        user: medvedev
+#        password: nuncOmnia113!
 #        driver: pdo_pgsql
+
+        dbname: challenger22
+        host: 78.46.124.49
+        port: 5432
+        user: challenger22
+        password: v0B4XUN4f
+        driver: pdo_pgsql
 
         # IMPORTANT: You MUST configure your db driver and server version,
         # either here or in the DATABASE_URL env var (see .env file)

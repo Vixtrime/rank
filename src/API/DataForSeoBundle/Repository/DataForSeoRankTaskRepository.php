@@ -45,6 +45,26 @@ class DataForSeoRankTaskRepository extends ServiceEntityRepository
         $this->_em->flush();
     }
 
+    /**
+     * @param array $tasks
+     * @throws ORMException
+     * @throws \Doctrine\Common\Persistence\Mapping\MappingException
+     */
+    public function saveTasks(array $tasks)
+    {
+        $batchSize = 20;
+        $tasksCount = count($tasks);
+        for ($i = 0; $i < $tasksCount; $i++) {
+            $this->_em->persist($tasks[$i]);
+            if (($i % $batchSize) === 0) {
+                $this->_em->flush();
+                $this->_em->clear();
+            }
+        }
+        $this->_em->flush();
+        $this->_em->clear();
+    }
+
     public function getTasks()
     {
         return $this->_em->createQueryBuilder()

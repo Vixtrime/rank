@@ -123,4 +123,17 @@ class SeoController extends AbstractController
         }
         return new JsonResponse($response);
     }
+
+    /**
+     * @Route(path="/seo-api/{seoApiProvider}/{apiProcessor}/seo-task/recive-postback", methods={"POST"})
+     * @param $seoApiProvider
+     * @param $apiProcessor
+     * @param Request $request
+     * @throws \Exception
+     */
+    public function receivePostback($seoApiProvider, $apiProcessor, Request $request)
+    {
+        $newTaskInfo = json_decode($request->getContent(), true);
+        $this->seoApiProviderFactory->getSeoApiProvider($seoApiProvider)->getApiProcessor($apiProcessor)->processPostback($newTaskInfo);
+    }
 }

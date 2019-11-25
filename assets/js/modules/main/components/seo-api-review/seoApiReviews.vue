@@ -13,6 +13,7 @@
                                 <th class="text-left">Results count</th>
                                 <th class="text-left">Results Check Url</th>
                                 <th class="text-left">Result snippet</th>
+                                <th class="text-left">Result position</th>
                                 <th class="text-left">Status</th>
                             </tr>
                             </thead>
@@ -24,6 +25,7 @@
                                 <td>{{ task.resultsCount }}</td>
                                 <td>{{ task.resultSeCheckUrl }}</td>
                                 <td>{{ task.resultSnippet }}</td>
+                                <td>{{ task.resultPosition     }}</td>
                                 <td v-if="task.status === 0">
                                     <v-btn @click="refreshTask(task.id)" class="mx-2" fab dark x-small
                                            color="orange lighten-1">
@@ -69,9 +71,9 @@
             this.getTasks().then((response) => {
                 this.tasks = response.data;
             });
-            setInterval(() => {
-                this.refreshTasks()
-            }, 5000);
+            // setInterval(() => {
+            //     this.refreshTasks()
+            // }, 5000);
         },
         methods: {
             getTasks() {

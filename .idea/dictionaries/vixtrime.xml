@@ -2,6 +2,7 @@
   <dictionary name="vixtrime">
     <words>
       <w>axios</w>
+      <w>postback</w>
     </words>
   </dictionary>
 </component>

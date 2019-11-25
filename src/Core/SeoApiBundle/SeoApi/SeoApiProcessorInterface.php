@@ -40,4 +40,10 @@ interface SeoApiProcessorInterface
      * @return mixed
      */
     public function syncTask($taskId);
+
+    /**
+     * @param array $postbackData
+     * @return mixed
+     */
+    public function processPostback(array $postbackData);
 }
