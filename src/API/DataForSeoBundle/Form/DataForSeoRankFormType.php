@@ -27,7 +27,6 @@ class DataForSeoRankFormType extends AbstractType
             ->add('se', IntegerType::class, [
                 'constraints' => [
                     new NotBlank(),
-                    new Length(['min' => 3, 'max' => 128])
                 ]
             ])
             ->add('loc', IntegerType::class, [
@@ -38,6 +37,7 @@ class DataForSeoRankFormType extends AbstractType
             ->add('key', TextType::class, [
                 'constraints' => [
                     new NotBlank(),
+                    new Length(['min' => 3, 'max' => 128])
                 ]
             ])
             ->add('site', TextType::class, [

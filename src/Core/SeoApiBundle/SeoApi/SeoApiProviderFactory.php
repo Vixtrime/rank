@@ -29,6 +29,7 @@ class SeoApiProviderFactory
     /**
      * @param $seoApiProviderName
      * @return SeoApiProviderInterface
+     * @throws \Exception
      */
     public function getSeoApiProvider($seoApiProviderName): SeoApiProviderInterface
     {
@@ -36,6 +37,8 @@ class SeoApiProviderFactory
             case DataForSeoApiProvider::getApiProviderName():
                 return $this->containerService->getFromContainer(DataForSeoApiProvider::class);
                 break;
+            default:
+                throw new \Exception('No seo api provider called like ' . $seoApiProviderName);
         }
     }
 }

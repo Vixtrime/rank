@@ -151,7 +151,6 @@ class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
                     $rankTask->setKey($keyword)->setStatus(0);
                     $this->rankTaskRepository->save($rankTask);
 
-
                 } else {
                     $this->logger->error('API error.' . $postResult['results'][$token]['error']['message'] . '; Key: ' . $form->getNormData()['key']);
                     throw new \InvalidArgumentException('API error.' . $postResult['results'][$token]['error']['message']);
@@ -159,7 +158,7 @@ class DataForSeoRankApiProcessor implements SeoApiProcessorInterface
             }
         } else {
             //TODO Handle form errors no front-end part
-            //dd($this->formService->getFormErrors($form));
+//            dd($this->formService->getFormErrors($form));
             throw new \InvalidArgumentException('Incorrect form data.');
         }
     }

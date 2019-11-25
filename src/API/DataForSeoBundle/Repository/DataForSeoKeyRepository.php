@@ -27,6 +27,11 @@ class DataForSeoKeyRepository extends ServiceEntityRepository
         return new DataForSeoKey($keyId, $keyValue);
     }
 
+    /**
+     * @param DataForSeoKey $key
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function saveKey(DataForSeoKey $key)
     {
         $this->_em->persist($key);

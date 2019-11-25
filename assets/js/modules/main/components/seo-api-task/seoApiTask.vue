@@ -56,7 +56,6 @@
         name: "seoApiTask",
         data() {
             return {
-                select: {state: 'Florida', abbr: 'FL'},
                 app: {},
                 btnInfo: null,
                 form: {
@@ -87,12 +86,20 @@
                     taskForm: this.form.formSchema
                 }).then((response) => {
                     this.btnInfo = response.data.message;
+                    if (response.data.success) {
+                        this.clearFormFields();
+                    }
                 });
             },
             prepareTaskForm() {
-                console.log(this.form.formData.locSelected.id);
                 this.form.formSchema.loc = this.form.formData.locSelected.id;
                 this.form.formSchema.se = this.form.formData.seSelected.id;
+            },
+            clearFormFields() {
+                this.form.formData.locSelected = {};
+                this.form.formData.seSelected = {};
+                this.form.formSchema.key = [];
+                this.form.formSchema.site = [];
             }
         }
     }

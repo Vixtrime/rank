@@ -39,6 +39,7 @@ class DataForSeoApiProvider implements SeoApiProviderInterface
     /**
      * @param string $apiProcessorName
      * @return SeoApiProcessorInterface
+     * @throws \Exception
      */
     public function getApiProcessor(string $apiProcessorName): SeoApiProcessorInterface
     {
@@ -46,6 +47,8 @@ class DataForSeoApiProvider implements SeoApiProviderInterface
             case DataForSeoRankApiProcessor::getApiProcessorName() :
                 return $this->containerService->getFromContainer(DataForSeoRankApiProcessor::class);
                 break;
+            default:
+                throw new \Exception('No api processor called like ' . $apiProcessorName);
         }
     }
 }

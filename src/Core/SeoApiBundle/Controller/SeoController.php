@@ -66,6 +66,7 @@ class SeoController extends AbstractController
      * @param $seoApiProvider
      * @param $apiProcessor
      * @param $id
+     * @throws \Exception
      */
     public function getSeoTask($seoApiProvider, $apiProcessor, $id)
     {
@@ -77,6 +78,7 @@ class SeoController extends AbstractController
      * @param $seoApiProvider
      * @param $apiProcessor
      * @return JsonResponse
+     * @throws \Exception
      */
     public function getSeoTasks($seoApiProvider, $apiProcessor)
     {
@@ -91,6 +93,7 @@ class SeoController extends AbstractController
      * @param $seoApiProvider
      * @param $apiProcessor
      * @return JsonResponse
+     * @throws \Exception
      */
     public function getSeoTaskForm($seoApiProvider, $apiProcessor)
     {
